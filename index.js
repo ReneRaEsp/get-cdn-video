@@ -14,8 +14,9 @@ const scrapeHat = async (req, res) => {
   console.log(url)
   let posibleLink
   try {
-    await axios.get('https://' + url).then((response) => {
+    await axios.get(url).then((response) => {
       posibleLink = response.data
+      console.log(posibleLink)
       let positionInit = posibleLink.search('download-link')
       posibleLink = posibleLink.substring(positionInit)
       positionInit = posibleLink.search('http')
