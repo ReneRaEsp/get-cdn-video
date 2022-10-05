@@ -1,6 +1,6 @@
 const cors = rquire('cors')
 
-export const startCors = (app) => {
+const startCors = (app) => {
   app.use(cors())
   // Configurar cabeceras y cors
   app.use((req, res, next) => {
@@ -16,4 +16,8 @@ export const startCors = (app) => {
     res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE')
     next()
   })
+}
+
+module.exports = {
+    startCors
 }
