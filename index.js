@@ -1,9 +1,14 @@
 const express = require('express')
 const axios = require('axios')
 const request = require('request')
+const { startCors } = require('./middlewares/cors.middleware.js')
 
 const app = express()
 
+//Middlewares
+startCors(app)
+
+//Controllers - Routes
 const scrapeHat = async (req, res) => {
   let url = req.query.url
   console.log(url)
