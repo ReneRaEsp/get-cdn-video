@@ -1,4 +1,4 @@
-const cors = rquire('cors')
+const cors = require('cors')
 
 const startCors = (app) => {
   app.use(cors())
