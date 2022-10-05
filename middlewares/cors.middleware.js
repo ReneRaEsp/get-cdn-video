@@ -1,4 +1,4 @@
-import cors from 'cors'
+const cors = rquire('cors')
 
 export const startCors = (app) => {
   app.use(cors())
