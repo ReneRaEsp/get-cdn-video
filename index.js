@@ -6,10 +6,10 @@ const app = express()
 
 const scrapeHat = async (req, res) => {
   let url = req.query.url
+  console.log(url)
   let posibleLink
-  await axios
-    .get(url)
-    .then((response) => {
+  try {
+    await axios.get('https://' + url).then((response) => {
       posibleLink = response.data
       let positionInit = posibleLink.search('download-link')
       posibleLink = posibleLink.substring(positionInit)
@@ -18,22 +18,20 @@ const scrapeHat = async (req, res) => {
       let positionFinal = posibleLink.search('"')
       posibleLink = posibleLink.substring(0, positionFinal)
     })
-    .catch((err) => {
-      res.json(err)
+    request(
+      { url: posibleLink, followRedirect: false },
+      (err, response, body) => {
+        posibleLink = response.headers.location
+        res.status(200).json({
+          video_url: posibleLink,
+        })
+      },
+    )
+  } catch (err) {
+    res.status(500).json({
+      msg: err,
     })
-
-  request({ url: posibleLink, followRedirect: false }, (err, response, body) => {
-    if (!err) {
-      posibleLink = response.headers.location
-      res.status(200).json({
-        video_url: posibleLink,
-      })
-    } else {
-      res.status(404).json({
-        video_url: 'not found',
-      })
-    }
-  })
+  }
 }
 
 const render = (req, res) => {
