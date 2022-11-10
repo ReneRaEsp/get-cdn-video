@@ -1,20 +1,22 @@
 const axios = require('axios')
+const jsdom = require('jsdom')
+const { JSDOM } = jsdom
 
 const scrapeTabooDaddy = async (req, res) => {
-  let url = req.query.url
+  const url = req.query.url
   let posibleLink
   try {
     await axios.get(url).then((response) => {
       posibleLink = response.data
-      let positionInit = posibleLink.search('contentURL')
-      posibleLink = posibleLink.substring(positionInit)
-      positionInit = posibleLink.search('http')
-      posibleLink = posibleLink.substring(positionInit)
-      let positionFinal = posibleLink.search('"')
-      posibleLink = posibleLink.substring(0, positionFinal)
+      const dom = new JSDOM(posibleLink, {
+        runScripts: 'dangerously',
+        resources: 'usable'
+      })
+      const { document } = dom.window
+      posibleLink = document.getElementsByTagName('source')[0].src
     })
     res.status(200).json({
-      video_url: posibleLink,
+      video_url: posibleLink
     })
   } catch (e) {
     res.status(500).json({
